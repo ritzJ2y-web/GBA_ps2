@@ -79,7 +79,7 @@ static void init_video_hdmi_safe(void) {
     gbaTex.Height = GBA_HEIGHT;
     gbaTex.PSM = GS_PSM_CT32;
     gbaTex.Filter = GS_FILTER_NEAREST;
-    gbaTex.Mem = gba.framebuffer;
+    gbaTex.Mem = (u32 *)gba.framebuffer;
     gbaTex.Vram = gsKit_vram_alloc(gsGlobal, gsKit_texture_size(GBA_WIDTH, GBA_HEIGHT, GS_PSM_CT32), GSKIT_ALLOC_USERBUFFER);
     if (gbaTex.Vram == GSKIT_ALLOC_ERROR) {
         gbaTex.Vram = 0;
@@ -144,7 +144,7 @@ static void try_load_rom_from_usb(GBA_State *state) {
 static void present_frame(void) {
     if (!gsGlobal) return;
 
-    gbaTex.Mem = gba.framebuffer;
+    gbaTex.Mem = (u32 *)gba.framebuffer;
     gsKit_texture_upload(gsGlobal, &gbaTex);
     gsKit_clear(gsGlobal, GS_SETREG_RGBAQ(0x00, 0x00, 0x00, 0x00, 0x00));
     gsKit_prim_sprite_texture(
