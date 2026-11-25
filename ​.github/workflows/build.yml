@@ -1,0 +1,32 @@
+name: Build GBA PS2 ELF
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up PS2Dev environment
+        uses: ps2dev/setup-ps2dev@v1
+
+      - name: Build with make
+        run: |
+          export PS2DEV=/usr/local/ps2dev
+          export PS2SDK=$PS2DEV/ps2sdk
+          export GSKIT=$PS2DEV/gsKit
+          export PATH=$PS2DEV/bin:$PS2DEV/ee/bin:$PS2DEV/iop/bin:$PS2DEV/dvp/bin:$PATH
+          make clean || true
+          make
+
+      - name: Upload GBA_PS2.ELF artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: GBA_PS2_ELF
+          path: GBA_PS2.ELF
